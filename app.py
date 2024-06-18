@@ -3,13 +3,16 @@ from pytube import YouTube
 from pydub import AudioSegment
 import os
 import re
-import threading
 
 # Function to sanitize file name
 def sanitize_filename(filename):
-    # Replace invalid characters with underscores
-    return re.sub(r'[\\/*?:"<>|\s-]', '_', filename)
-
+    sanitized = re.sub(r'[^a-zA-Z]', '_', filename)
+    # Remove duplicate underscores
+    sanitized = re.sub(r'_+', '_', sanitized)
+    # Remove leading or trailing underscores
+    sanitized = sanitized.strip('_')
+    return sanitized
+    
 # Function to download YouTube video audio and convert to specified format
 def download_and_convert(url, output_path, audio_format="mp3", bitrate="320k"):
     try:
